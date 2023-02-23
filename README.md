@@ -4,3 +4,4 @@
 python
 cv2
 numpy
+panda
