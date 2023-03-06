@@ -8,20 +8,23 @@ from hog import pre_built_hog
 from hog import compute_hog
 
 from svm import train
-from svm import validate
+from svm import test
 
 # Set True if want to train the classifier
 tr = False
-url = 'http://192.168.1.147:8080/video'
 
-def main(tr):
+# Change the url with the one of your IP-camera. Set to int(0) if you want to use the webcam of your pc
+url = 'http://192.168.1.147:8080/video'
+# url = 0
+
+def main():
+
+    if tr == True:
+        train()
+        test()
 
     # Cameras Creation
     cam = Camera(url)
-
-    if tr == True:
-        train(False)
-        validate(False)
     
     clf = joblib.load("models/model.pkl")
     cnt = 0
@@ -47,9 +50,9 @@ def main(tr):
                         cnt_0 += 1        
         
         if cv2.waitKey(1) & 0xFF == ord('q'):
-            print(cnt/cnt_0)
+            # print(cnt/cnt_0)
             break
     
     cv2.destroyAllWindows()
 
-main(tr)
+main()

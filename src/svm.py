@@ -1,6 +1,4 @@
 from sklearn import svm
-from sklearn.linear_model import SGDClassifier
-from sklearn.neural_network import MLPClassifier
 
 import joblib
 from hog import pre_built_hog
@@ -13,6 +11,13 @@ from tqdm import tqdm
 neg_dir = "dataset/0/"
 pos_dir = "dataset/1/"
 n_val = 40
+
+# Set to True if want to test this file alone
+t = False
+
+# Set to True if want to load .pkl files and avoid to re-processing all the images
+train_load = False
+test_load = False
 
 def prepare_dataset():
     negative_list = os.listdir(neg_dir)
@@ -42,12 +47,12 @@ def prepare_dataset():
     joblib.dump(hogs,"models/train_hogs.pkl")
     joblib.dump(labels,"models/train_labels.pkl")
 
-def test(load):
+def test():
     clf = joblib.load("models/model.pkl")
 
     total_cnt = 0
     positive_cnt = 0
-    if load == True:
+    if test_load == True:
         hogs = joblib.load("models/val_hogs.pkl")
         labels = joblib.load("models/val_labels.pkl")
         for hog,label in zip(hogs,labels):
@@ -70,7 +75,6 @@ def test(load):
         for img in negative_list:
             frame = cv2.imread(neg_dir+img)
             # hog = pre_built_hog(frame)
-            hogs = joblib.load("models/train_hogs.pkl")
             hog = compute_hog(frame)
             predict = clf.predict([hog])
             total_cnt += 1
@@ -95,18 +99,21 @@ def test(load):
         joblib.dump(hogs,"models/val_hogs.pkl")
         joblib.dump(labels,"models/val_labels.pkl")
     
-    print("Accuracy: " + str((positive_cnt/total_cnt)*100) + "%")
+    print("\nAccuracy: " + str((positive_cnt/total_cnt)*100) + "%")
 
-def train(load):
-    if load == False:
+def train():
+    if train_load == False:
         prepare_dataset()
     
     hogs_train = joblib.load("models/train_hogs.pkl")
     labels_train = joblib.load("models/train_labels.pkl")
-    clf = svm.SVC(kernel='linear')
     
+    clf = svm.SVC(kernel='linear')
     clf.fit(hogs_train,labels_train)
     joblib.dump(clf,"models/model.pkl")
 
-train(load = False)
-test(load = False)
+
+
+if t == True:
+    train()
+    test()
