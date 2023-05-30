@@ -4,7 +4,6 @@ import joblib
 from camera import Camera
 from motion_detection import detect_motion
 
-from hog import pre_built_hog
 from hog import compute_hog
 
 from svm import train
@@ -14,7 +13,7 @@ from svm import test
 tr = False
 
 # Change the url with the one of your IP-camera. Set to int(0) if you want to use the webcam of your pc
-url = 'http://192.168.1.147:8080/video'
+url = 'http://192.168.1.101:4747/video'
 # url = 0
 
 def main():
@@ -38,7 +37,6 @@ def main():
                 cv2.imshow("Movemend Detected", motion)
                 for sec in prs:
                     hog = compute_hog(sec)
-                    # hog = pre_built_hog(nframe)
                     predict = clf.predict([hog])
                     print(predict)
                     if(predict[0] == 1):

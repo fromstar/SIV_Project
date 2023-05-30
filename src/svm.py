@@ -1,7 +1,6 @@
 from sklearn import svm
 
 import joblib
-from hog import pre_built_hog
 from hog import compute_hog
 
 import cv2

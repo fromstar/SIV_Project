@@ -69,14 +69,6 @@ def preprocess_image(img):
 
     return sf
 
-def pre_built_hog(frame):
-    frame = preprocess_image(frame)
-    fd, hog_image = skimage.feature.hog(frame, orientations=9, pixels_per_cell=(8, 8),
-                	cells_per_block=(2, 2), visualize=True)  
-    # cv2.imshow("frame",hog_image)
-    return fd
-
-
 def compute_hog(frame):
 
     frame = preprocess_image(frame)
@@ -191,7 +183,6 @@ def test():
     plt.show()
 
     # hog = compute_hog(frame)
-    # phog = pre_built_hog(frame)
     # cv2.waitKey(0)
 
 if t == True:
